@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Demo": {
+      "commandName": "Project",
+      "commandLineArgs": "ef migrations -a -i -ncpy create MyFirstMigration"
+    }
+  }
+}

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<strict>
+
+  <!--CLI DRIVERS-->
+  <drivers>
+    <driver x="entityframework">ef</driver>
+    <driver x="dotnet">dotnet</driver>
+  </drivers>
+
+  <commandset>
+    <cmd x="new">new</cmd>
+    <cmd x="ef">ef</cmd>
+    <cmd x="migrations">migrations</cmd>
+    <cmd x="create">create</cmd>
+  </commandset>
+
+  <flags>
+    <flag x="all">-a</flag>
+    <flag x="ignore">-i</flag>
+    <flag x="nocopy">-ncpy</flag>
+  </flags>
+
+  <values>
+    <val x="migrationname" allowspace="true" allowwildchar="false" kind="name"></val>
+  </values>
+
+
+  <!--CLI RULES-->
+  <rules>
+
+    <rule x="create-migration" desc="Create a migration in entity framework" snip="-cnm">
+      <set inherit="commandset">ef</set>
+      <set inherit="commandset">migrations</set>
+
+      <set inherit="flags">
+        <optionset orderenforce="false" optional="true">
+          <subset optional="false">all</subset>
+          <subset optional="false">ignore</subset>
+          <subset optional="false">nocopy</subset>
+        </optionset>
+      </set>
+
+      <set inherit="commandset">create</set>
+      <set inherit="values">migrationname</set>
+    </rule>
+
+
+  </rules>
+
+</strict>
+
