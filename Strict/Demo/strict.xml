@@ -4,15 +4,16 @@
 
   <!--CLI DRIVERS-->
   <drivers>
-    <driver x="entityframework">ef</driver>
+    <driver x="ef">ef</driver>
     <driver x="dotnet">dotnet</driver>
   </drivers>
 
   <commandset>
     <cmd x="new">new</cmd>
-    <cmd x="ef">ef</cmd>
     <cmd x="migrations">migrations</cmd>
+    <cmd x="mitigate">mitigate</cmd>
     <cmd x="create">create</cmd>
+    <cmd x="ro">roleover</cmd>
   </commandset>
 
   <flags>
@@ -22,17 +23,17 @@
   </flags>
 
   <values>
-    <val x="migrationname" allowspace="true" allowwildchar="false" kind="name"></val>
+    <val x="migrationname" allowspace="false" allowwildchar="false" kind="name"></val>
+    <val x="migrationlocation" allowspace="true" allowwildchar="false" kind="location"></val>
   </values>
 
 
   <!--CLI RULES-->
   <rules>
 
-    <rule x="create-migration" desc="Create a migration in entity framework" snip="-cnm">
-      <set inherit="commandset">ef</set>
+    <rule x="create-migration" desc="Create a migration in entity framework" snip=":migrate">
+      <set inherit="drivers">ef</set>
       <set inherit="commandset">migrations</set>
-
       <set inherit="flags">
         <optionset orderenforce="false" optional="true">
           <subset optional="false">all</subset>
@@ -40,11 +41,31 @@
           <subset optional="false">nocopy</subset>
         </optionset>
       </set>
-
       <set inherit="commandset">create</set>
       <set inherit="values">migrationname</set>
     </rule>
 
+    <rule x="run-mitigation" desc="Runs a mitigation under the same database schema" snip=":mitigate">
+      <set inherit="drivers">ef</set>
+      <set inherit="commandset">mitigate</set>
+      <set inherit="flags">
+        <optionset orderenforce="false" optional="true">
+          <subset optional="false">ignore</subset>
+        </optionset>
+      </set>
+    </rule>
+
+    <rule x="rollover-migration" desc="Rolls an existing migration from a selected list" snip=":rollover">
+      <set inherit="drivers">ef</set>
+      <set inherit="commandset">ro</set>
+      <set inherit="flags">
+        <optionset orderenforce="false" optional="true">
+          <subset optional="false">all</subset>
+          <subset optional="false">ignore</subset>
+          <subset optional="false">nocopy</subset>
+        </optionset>
+      </set>
+    </rule>
 
   </rules>
 

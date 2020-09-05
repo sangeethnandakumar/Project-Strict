@@ -14,34 +14,42 @@ namespace Strict
             foreach(var rule in command.Rules)
             {
                 var regex = "^";
+                var commandSample = "";
                 foreach(var set in rule.Sets)
                 {
                     switch(set.Inherit)
                     {
                         case "drivers":
                             regex += command.Drivers.Where(x => x.X == set.Value).FirstOrDefault().Value;
+                            commandSample += command.Drivers.Where(x => x.X == set.Value).FirstOrDefault().Value;
                             break;
                         case "commandset":
-                            regex += " ";
-                            regex += command.CommandSets.Where(x => x.X == set.Value).FirstOrDefault().Value;                            
+                            regex += "[ ]+";
+                            commandSample += " ";
+                            regex += command.CommandSets.Where(x => x.X == set.Value).FirstOrDefault().Value;
+                            commandSample += command.CommandSets.Where(x => x.X == set.Value).FirstOrDefault().Value;
                             break;
-                        case "flags":                            
-                            foreach(var optionset in set.OptionSets)
+                        case "flags":
+                            commandSample += " ";
+                            foreach (var optionset in set.OptionSets)
                             {
                                 var flag = "(";
                                 for (var i= 0; i < optionset.SubSets.Count; i++)
                                 {
-                                    flag += $" {command.Flags.Where(x => x.X == optionset.SubSets[i].Value).FirstOrDefault().Value}";
+                                    flag += $"[ ]+{command.Flags.Where(x => x.X == optionset.SubSets[i].Value).FirstOrDefault().Value}";
+                                    commandSample += $"{command.Flags.Where(x => x.X == optionset.SubSets[i].Value).FirstOrDefault().Value} ";
                                     flag += (i != optionset.SubSets.Count - 1) ? "|" : "";
                                 }
                                 regex += $"{flag})*";
                             }                            
                             break;
-                        case "values":
-                            regex += " ";
+                        case "values":                            
+                            regex += "[ ]+";
+                            commandSample += " ";
                             var valProps = command.Values.Where(x => x.X == set.Value).FirstOrDefault();
                             if(valProps.Kind == "name")
                             {
+                                commandSample += "<FILENAME>";
                                 regex += $"[a-zA-Z]+";
                             }
                             break;
@@ -49,6 +57,7 @@ namespace Strict
                 }
                 regex += "$";
                 rule.Regex = regex;
+                rule.CommandSample = commandSample;
             }
             return command.Rules;
         }

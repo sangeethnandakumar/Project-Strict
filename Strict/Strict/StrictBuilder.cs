@@ -1,10 +1,13 @@
-﻿using Strict.Components;
+﻿using Colorful;
+using Strict.Components;
 using Strict.Structure;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
+using Console = Colorful.Console;
 
 namespace Strict
 {
@@ -28,26 +31,50 @@ namespace Strict
             Schema.Rules = engine.GenerateValidators(Schema);
         }
 
-        public Command ParseCommand(string command)
+        public Rule ParseCommand(string command)
         {
-            bool isMatch = false;
-            foreach(var rule in Schema.Rules)
+            //Check for reserver commands
+            if (command.ToLower() == "help")
             {
-                Regex regex = new Regex(rule.Regex);
-                Match match = regex.Match(command);
-                if (match.Success)
+                Console.WriteLine("");
+                Console.WriteLine("All Available CLI Commands", Color.White);
+                Console.WriteLine("--------------------------", Color.White);
+                foreach (var rule in Schema.Rules)
                 {
-                    return null;
+                    string dream = "{0} : {1} ({2})";
+                    Formatter[] fruits = new Formatter[]
+                    {
+                        new Formatter(rule.CommandSample, Color.DeepPink),
+                        new Formatter(rule.Description, Color.Pink),
+                        new Formatter(rule.Sniplet, Color.Plum)
+                    };
+                    Console.WriteLineFormatted(dream, Color.Gray, fruits);
                 }
+                return null;
             }
-            if(!isMatch)
+            else
             {
-                Console.WriteLine("Unable to recognise the following command");
+                bool isMatch = false;
+                foreach (var rule in Schema.Rules)
+                {
+                    Console.WriteLine($"Rule: {rule.Regex}");
+                    Regex regex = new Regex(rule.Regex);
+                    Match match = regex.Match(command);
+                    if (match.Success)
+                    {
+                        Console.WriteLine(rule.Description, Color.Plum);
+                        return rule;
+                    }
+                }
+                if (!isMatch)
+                {
+                    Console.WriteLine("Unable to recognise the following command");
+                }
+                return null;
             }
-            return null;
         }
 
-            private Command ParseSchema()
+        private Command ParseSchema()
         {
             var command = new Command();
 
@@ -119,7 +146,7 @@ namespace Strict
             //Gather sets
             foreach (XmlNode set in rule.ChildNodes)
             {
-                if(set.Attributes["inherit"]?.InnerText.ToLower() != "flags")
+                if (set.Attributes["inherit"]?.InnerText.ToLower() != "flags")
                 {
                     sets.Add(new Set
                     {
@@ -135,7 +162,7 @@ namespace Strict
                         Value = set.InnerText,
                         OptionSets = ParseOptionSets(set)
                     });
-                }                
+                }
             }
             return sets;
         }

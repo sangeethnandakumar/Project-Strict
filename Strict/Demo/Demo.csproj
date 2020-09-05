@@ -6,13 +6,21 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Strict\Strict.csproj" />
+    <None Remove="strict.xml" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="strict.xml">
+    <Content Include="strict.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Strict\Strict.csproj" />
   </ItemGroup>
 
 </Project>
