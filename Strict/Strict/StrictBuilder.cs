@@ -23,7 +23,6 @@ namespace Strict
             //Read the XML data
             doc = new XmlDocument();
             doc.Load(schema);
-
             //Schema will be parsed to memory objects
             Schema = ParseSchema();
             SyntaxEngine engine = new SyntaxEngine();
@@ -31,25 +30,56 @@ namespace Strict
             Schema.Rules = engine.GenerateValidators(Schema);
         }
 
-        public Rule ParseCommand(string command)
+        public CommandData ParseCommand(string command, Rule commandRule)
+        {
+            var cmd = new CommandData();
+            //foreach(var set in commandRule.Sets)
+            //{
+            //    if(set.Inherit == "flags")
+            //    {
+            //        foreach(var flag in set.Options)
+            //        {
+            //            //cmd.Flags.Add(new Flag { X = flag.Value });
+            //        }
+            //    }
+            //    else if (set.Inherit == "values")
+            //    {
+            //        //cmd.Values.Add(new Value { X = set.Value });
+            //    }
+            //}
+            return cmd;
+        }
+
+        public Rule ParseRule(string command)
         {
             //Check for reserver commands
             if (command.ToLower() == "help")
             {
                 Console.WriteLine("");
-                Console.WriteLine("All Available CLI Commands", Color.White);
-                Console.WriteLine("--------------------------", Color.White);
+                Console.WriteLine("Supported Commands On This CLI", Color.White);
+                Console.WriteLine("------------------------------", Color.White);
                 foreach (var rule in Schema.Rules)
                 {
-                    string dream = "{0} : {1} ({2})";
-                    Formatter[] fruits = new Formatter[]
+                    string clitext = "{0} : {1} ({2})";
+                    Formatter[] colors = new Formatter[]
                     {
                         new Formatter(rule.CommandSample, Color.DeepPink),
-                        new Formatter(rule.Description, Color.Pink),
-                        new Formatter(rule.Sniplet, Color.Plum)
+                        new Formatter(rule.Description, Color.White),
+                        new Formatter(rule.Sniplet, Color.Yellow)
                     };
-                    Console.WriteLineFormatted(dream, Color.Gray, fruits);
+                    Console.WriteLineFormatted(clitext, Color.Gray, colors);                    
                 }
+                Console.WriteLine();
+                return null;
+            }
+            else if (command.ToLower() == "clear")
+            {
+                Console.Clear();
+                return null;
+            }
+            else if (string.IsNullOrWhiteSpace(command))
+            {                
+                Console.WriteLine("Type in a command to execute", Color.Plum);
                 return null;
             }
             else
@@ -68,7 +98,13 @@ namespace Strict
                 }
                 if (!isMatch)
                 {
-                    Console.WriteLine("Unable to recognise the following command");
+                    string clitext = "Unable to resolve the command: '{0}'.\nCheck if the syntax is correct or type '{1}' to see the list of commands, the CLI supports.";
+                    Formatter[] colors = new Formatter[]
+                    {
+                        new Formatter(command, Color.DeepPink),
+                        new Formatter("help", Color.DeepPink)
+                    };
+                    Console.WriteLineFormatted(clitext, Color.Gray, colors);
                 }
                 return null;
             }
@@ -160,27 +196,11 @@ namespace Strict
                     {
                         Inherit = set.Attributes["inherit"]?.InnerText,
                         Value = set.InnerText,
-                        OptionSets = ParseOptionSets(set)
+                        Options = ParseSubSets(set)
                     });
                 }
             }
             return sets;
-        }
-
-        private List<OptionSet> ParseOptionSets(XmlNode set)
-        {
-            var optionSets = new List<OptionSet>();
-            //Gather optionsets
-            foreach (XmlNode optionSet in set.ChildNodes)
-            {
-                optionSets.Add(new OptionSet
-                {
-                    OrderEnforce = bool.Parse(optionSet.Attributes["orderenforce"]?.InnerText),
-                    Optional = bool.Parse(optionSet.Attributes["optional"]?.InnerText),
-                    SubSets = ParseSubSets(optionSet)
-                });
-            }
-            return optionSets;
         }
 
         private List<SubSet> ParseSubSets(XmlNode optionSet)

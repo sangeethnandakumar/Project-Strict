@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <strict>
-
+  
   <!--CLI DRIVERS-->
   <drivers>
     <driver x="ef">ef</driver>
     <driver x="dotnet">dotnet</driver>
   </drivers>
-
+  
+  <!--CLI COMMAND SETS-->
   <commandset>
     <cmd x="new">new</cmd>
     <cmd x="migrations">migrations</cmd>
@@ -15,19 +16,20 @@
     <cmd x="create">create</cmd>
     <cmd x="ro">roleover</cmd>
   </commandset>
-
+  
+  <!--CLI FLAGS-->
   <flags>
     <flag x="all">-a</flag>
     <flag x="ignore">-i</flag>
     <flag x="nocopy">-ncpy</flag>
   </flags>
-
+  
+  <!--CLI VALUES-->
   <values>
     <val x="migrationname" allowspace="false" allowwildchar="false" kind="name"></val>
     <val x="migrationlocation" allowspace="true" allowwildchar="false" kind="location"></val>
   </values>
-
-
+  
   <!--CLI RULES-->
   <rules>
 
@@ -35,11 +37,9 @@
       <set inherit="drivers">ef</set>
       <set inherit="commandset">migrations</set>
       <set inherit="flags">
-        <optionset orderenforce="false" optional="true">
-          <subset optional="false">all</subset>
-          <subset optional="false">ignore</subset>
-          <subset optional="false">nocopy</subset>
-        </optionset>
+        <option optional="false">all</option>
+        <option optional="false">ignore</option>
+        <option optional="false">nocopy</option>
       </set>
       <set inherit="commandset">create</set>
       <set inherit="values">migrationname</set>
@@ -49,25 +49,20 @@
       <set inherit="drivers">ef</set>
       <set inherit="commandset">mitigate</set>
       <set inherit="flags">
-        <optionset orderenforce="false" optional="true">
-          <subset optional="false">ignore</subset>
-        </optionset>
+        <option optional="false">ignore</option>
       </set>
     </rule>
-
+    
     <rule x="rollover-migration" desc="Rolls an existing migration from a selected list" snip=":rollover">
       <set inherit="drivers">ef</set>
       <set inherit="commandset">ro</set>
       <set inherit="flags">
-        <optionset orderenforce="false" optional="true">
-          <subset optional="false">all</subset>
-          <subset optional="false">ignore</subset>
-          <subset optional="false">nocopy</subset>
-        </optionset>
+        <option optional="false">all</option>
+        <option optional="false">ignore</option>
+        <option optional="false">nocopy</option>
       </set>
     </rule>
 
   </rules>
 
 </strict>
-

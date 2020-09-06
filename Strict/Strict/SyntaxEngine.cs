@@ -30,18 +30,28 @@ namespace Strict
                             commandSample += command.CommandSets.Where(x => x.X == set.Value).FirstOrDefault().Value;
                             break;
                         case "flags":
+                            var flag = "";
                             commandSample += " ";
-                            foreach (var optionset in set.OptionSets)
+                            foreach(var option in set.Options)
                             {
-                                var flag = "(";
-                                for (var i= 0; i < optionset.SubSets.Count; i++)
+                                if(option.Optional==false)
                                 {
-                                    flag += $"[ ]+{command.Flags.Where(x => x.X == optionset.SubSets[i].Value).FirstOrDefault().Value}";
-                                    commandSample += $"{command.Flags.Where(x => x.X == optionset.SubSets[i].Value).FirstOrDefault().Value} ";
-                                    flag += (i != optionset.SubSets.Count - 1) ? "|" : "";
+                                    var flagValue = command.Flags.Where(x=>x.X==option.Value).FirstOrDefault().Value;
+                                    flag += $"[ ]+{flagValue}";
+                                    commandSample += $"{flagValue} ";
                                 }
-                                regex += $"{flag})*";
-                            }                            
+                            }
+                            flag += "(";
+                            for (var i = 0; i < set.Options.Count; i++)
+                            {
+                                if(set.Options[i].Optional==true)
+                                {
+                                    flag += $"[ ]+{command.Flags.Where(x => x.X == set.Options[i].Value).FirstOrDefault().Value}";
+                                    commandSample += $"{command.Flags.Where(x => x.X == set.Options[i].Value).FirstOrDefault().Value} ";
+                                    flag += (i != set.Options.Count - 1) ? "|" : "";
+                                }                                
+                            }
+                            regex += $"{flag})*";
                             break;
                         case "values":                            
                             regex += "[ ]+";

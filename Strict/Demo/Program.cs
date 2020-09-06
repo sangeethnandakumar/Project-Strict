@@ -12,15 +12,12 @@ namespace Demo
             var schema = @"C:\Users\sangeeth.CORP\Desktop\Projects\ProjectStrict\Strict\Demo\strict.xml";
             var cliBuilder = new StrictBuilder(schema);
 
+            read:
             var command = Console.ReadLine();
-            var commandRule = cliBuilder.ParseCommand(command);
-
-
-
-            Console.WriteLine("");
-            Console.WriteLine(JsonConvert.SerializeObject(commandRule));
-
-            Console.Read();
+            //Extract Command Rule & Command Data
+            var commandRule = cliBuilder.ParseRule(command);
+            var commandData = cliBuilder.ParseCommand(command, commandRule);
+            goto read;
         }
     }
 }

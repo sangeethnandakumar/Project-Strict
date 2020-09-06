@@ -8,11 +8,11 @@ namespace Strict.Components
     {
         public string Inherit { get; set; }
         public string Value { get; set; }
-        public List<OptionSet> OptionSets { get; set; }
+        public List<SubSet> Options { get; set; }
 
         public Set()
         {
-            OptionSets = new List<OptionSet>();
+            Options = new List<SubSet>();
         }
     }
 }
