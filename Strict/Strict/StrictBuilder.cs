@@ -4,6 +4,7 @@ using Strict.Structure;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
@@ -30,21 +31,29 @@ namespace Strict
             Schema.Rules = engine.GenerateValidators(Schema);
         }
 
-        public CommandData ParseCommand(string command, Rule commandRule)
+        public List<CommandData> ParseCommand(string command, Rule commandRule)
         {
-            var cmd = new CommandData();
-            //foreach(var set in commandRule.Sets)
+            var cmd = new List<CommandData>();
+            //var commandSections = command.Split(' ');
+            //foreach (var section in commandSections)
             //{
-            //    if(set.Inherit == "flags")
+            //    if(commandRule.Sets.Where(x=>x.Value==section && x.Inherit=="drivers").FirstOrDefault() != null)
             //    {
-            //        foreach(var flag in set.Options)
-            //        {
-            //            //cmd.Flags.Add(new Flag { X = flag.Value });
-            //        }
+            //        cmd.Add(new CommandData { Command = section, Kind = Kind.DRIVER });
+            //        continue;
             //    }
-            //    else if (set.Inherit == "values")
+            //    else if (commandRule.Sets.Where(x => x.Value == section && x.Inherit == "commandset").FirstOrDefault() != null)
             //    {
-            //        //cmd.Values.Add(new Value { X = set.Value });
+            //        cmd.Add(new CommandData { Command = section, Kind = Kind.COMMANDSET });
+            //        continue;
+            //    }
+            //    foreach(var set in commandRule.Sets)
+            //    {
+            //        if (set.Options.Where(x => x.Value == section).FirstOrDefault() != null)
+            //        {
+            //            cmd.Add(new CommandData { Command = section, Kind = Kind.FLAG });
+            //            continue;
+            //        }
             //    }
             //}
             return cmd;

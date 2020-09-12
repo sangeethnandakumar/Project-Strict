@@ -43,23 +43,13 @@
       </set>
       <set inherit="commandset">create</set>
       <set inherit="values">migrationname</set>
-    </rule>
+    </rule>    
 
     <rule x="run-mitigation" desc="Runs a mitigation under the same database schema" snip=":mitigate">
       <set inherit="drivers">ef</set>
       <set inherit="commandset">mitigate</set>
       <set inherit="flags">
         <option optional="false">ignore</option>
-      </set>
-    </rule>
-    
-    <rule x="rollover-migration" desc="Rolls an existing migration from a selected list" snip=":rollover">
-      <set inherit="drivers">ef</set>
-      <set inherit="commandset">ro</set>
-      <set inherit="flags">
-        <option optional="false">all</option>
-        <option optional="false">ignore</option>
-        <option optional="false">nocopy</option>
       </set>
     </rule>
 
